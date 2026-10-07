@@ -1,7 +1,11 @@
 import { NavLink } from "react-router-dom";
+import { PrimaryNavigation } from "./Navigation";
 
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `py-[5px] text-xs text-[#66665d] transition-colors hover:text-ink max-[760px]:px-[15px] max-[760px]:py-[10px] max-[760px]:text-[11px] ${isActive ? "text-ink shadow-[0_1px_#526044] max-[760px]:shadow-[inset_0_2px_#526044]" : ""}`;
+const navigationItems = [
+  { to: "/", label: "Our table", end: true },
+  { to: "/menu", label: "The menu" },
+  { to: "/contact", label: "Find us" },
+];
 
 export function Header() {
   return (
@@ -20,20 +24,7 @@ export function Header() {
           OLIVE <i className="text-clay not-italic">&</i> EMBER
         </span>
       </NavLink>
-      <nav
-        className="flex h-full items-center justify-center gap-9 max-[760px]:fixed max-[760px]:inset-x-0 max-[760px]:bottom-0 max-[760px]:z-50 max-[760px]:h-[58px] max-[760px]:justify-around max-[760px]:gap-0 max-[760px]:border-t max-[760px]:border-line max-[760px]:bg-paper"
-        aria-label="Main navigation"
-      >
-        <NavLink to="/" end className={navLinkClass}>
-          Our table
-        </NavLink>
-        <NavLink to="/menu" className={navLinkClass}>
-          The menu
-        </NavLink>
-        <NavLink to="/contact" className={navLinkClass}>
-          Find us
-        </NavLink>
-      </nav>
+      <PrimaryNavigation items={navigationItems} />
       <NavLink
         className="justify-self-end border-b border-olive py-[9px] text-xs text-ink max-[760px]:text-[10px] max-[390px]:text-[9px]"
         to="/contact"

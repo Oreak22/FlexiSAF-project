@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 
+const currentYear = new Date().getFullYear();
+
 export function Footer() {
   return (
     <footer className="flex min-h-[110px] items-center justify-between gap-5 border-t border-line px-[7.2%] py-[26px] max-[760px]:flex-wrap max-[760px]:items-start max-[760px]:px-[8%] max-[760px]:pt-7 max-[760px]:pb-[78px]">
@@ -14,7 +16,7 @@ export function Footer() {
         <Link to="/contact">Contact & hours</Link>
       </div>
       <span className="text-[10px] text-muted max-[760px]:hidden">
-        Brooklyn, New York · Est. 2018
+        Nigeria · {currentYear}
       </span>
     </footer>
   );

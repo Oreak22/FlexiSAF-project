@@ -4,12 +4,25 @@
 @theme {
   --font-sans: "DM Sans", sans-serif;
   --font-serif: "Playfair Display", Georgia, serif;
+  --text-label: 0.625rem;
+  --text-body-sm: 0.8125rem;
   --color-paper: #f7f5ef;
   --color-ink: #29281f;
   --color-muted: #77766c;
   --color-olive: #526044;
+  --color-olive-dark: #3f4a34;
   --color-line: #dcd9ce;
+  --color-surface-soft: #eeece3;
   --color-clay: #a35d3b;
+  --color-success: #526044;
+  --color-danger: #a33f32;
+  --color-disabled: #a09e94;
+  --spacing-page: 12.1%;
+  --spacing-page-mobile: 8%;
+  --radius-control: 2px;
+  --radius-card: 4px;
+  --shadow-active: 0 1px #526044;
+  --shadow-focus: 0 0 0 3px #52604433;
   --animate-rise-in: rise-in 700ms ease both;
 }
 

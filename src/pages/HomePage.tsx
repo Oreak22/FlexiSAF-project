@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { ButtonLink } from "../components/Button";
 import { usePageTitle } from "../hooks/usePageTitle";
 
 const heroImage =
@@ -6,8 +7,6 @@ const heroImage =
 const eyebrowClass = "text-[10px] font-semibold tracking-[1.1px] uppercase";
 const textLinkClass =
   "inline-flex items-center gap-[9px] text-[11px] font-semibold [&_span]:transition-transform hover:[&_span]:translate-x-1";
-const buttonClass =
-  "inline-flex min-h-[46px] items-center justify-center gap-[17px] px-[19px] text-[11px] font-semibold transition duration-200 hover:-translate-y-0.5";
 
 export function HomePage() {
   usePageTitle("A neighborhood table");
@@ -21,7 +20,7 @@ export function HomePage() {
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#181a13b8_0%,#181a136e_46%,#181a130f_100%)] max-[760px]:bg-[linear-gradient(90deg,#181a13bd,#181a1340)]" />
         <div className="relative z-10 ml-[12.1%] w-[min(650px,80%)] animate-rise-in py-[50px] motion-reduce:animate-none max-[760px]:ml-[8%] max-[760px]:w-[84%]">
           <span className={`${eyebrowClass} text-[#eee8d8]`}>
-            A neighborhood restaurant · Brooklyn, NY
+            A neighborhood restaurant · Nigeria
           </span>
           <h1 className="my-[27px] font-serif text-[82px] leading-[1.02] font-medium max-[760px]:text-[44px]">
             Come hungry.
@@ -32,9 +31,9 @@ export function HomePage() {
             Seasonal plates, generous pours, and a seat saved just for you.
           </p>
           <div className="mt-[29px] flex items-center gap-[27px] max-[760px]:items-start max-[760px]:flex-col max-[760px]:gap-[18px]">
-            <Link className={`${buttonClass} bg-[#f5f2e8] text-ink`} to="/menu">
+            <ButtonLink variant="light" to="/menu">
               Explore the menu <span aria-hidden="true">↗</span>
-            </Link>
+            </ButtonLink>
             <Link className={`${textLinkClass} text-[#f1efe7]`} to="/contact">
               Make a reservation <span aria-hidden="true">→</span>
             </Link>
@@ -45,7 +44,7 @@ export function HomePage() {
         </span>
       </section>
 
-      <section className="px-[12.1%] pt-[82px] pb-[98px] max-[760px]:px-[8%] max-[760px]:pt-[59px] max-[760px]:pb-[68px]">
+      <section className="px-page pt-[82px] pb-[98px] max-[760px]:px-page-mobile max-[760px]:pt-[59px] max-[760px]:pb-[68px]">
         <div className="flex items-center gap-3 text-[10px] font-semibold tracking-[1.1px] text-olive uppercase">
           <span className="text-[9px] text-clay">01</span> A seat at our table
         </div>
@@ -67,7 +66,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-[1.08fr_.92fr] bg-[#eeece3] max-[760px]:grid-cols-1">
+      <section className="grid grid-cols-[1.08fr_.92fr] bg-surface-soft max-[760px]:grid-cols-1">
         <img
           className="h-[410px] w-full object-cover max-[760px]:h-[280px]"
           src="https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1100&q=85"
@@ -92,16 +91,13 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="flex min-h-[138px] items-center justify-between gap-5 px-[12.1%] py-[26px] max-[760px]:items-start max-[760px]:flex-col max-[760px]:px-[8%] max-[760px]:py-[34px]">
+      <section className="flex min-h-[138px] items-center justify-between gap-5 px-page py-[26px] max-[760px]:items-start max-[760px]:flex-col max-[760px]:px-page-mobile max-[760px]:py-[34px]">
         <span className="font-serif text-2xl font-medium max-[760px]:text-[22px]">
           Tonight sounds nice.
         </span>
-        <Link
-          className={`${buttonClass} bg-olive text-white hover:bg-[#3f4a34]`}
-          to="/contact"
-        >
+        <ButtonLink to="/contact">
           Find your way here <span aria-hidden="true">↗</span>
-        </Link>
+        </ButtonLink>
         <span className="text-[11px] text-muted">
           Dinner, every day · 5 till late
         </span>

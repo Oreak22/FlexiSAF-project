@@ -1,4 +1,5 @@
 import { menuSections } from "../data/menu";
+import { List } from "../components/List";
 import { usePageTitle } from "../hooks/usePageTitle";
 import { formatCurrency } from "../utils/formatCurrency";
 
@@ -11,7 +12,7 @@ export function MenuPage() {
   return (
     <>
       <section
-        className="relative flex min-h-[350px] flex-col justify-center bg-cover bg-[position:center_54%] px-[12.1%] py-[50px] text-white max-[760px]:min-h-[300px] max-[760px]:px-[8%] max-[760px]:py-10"
+        className="relative flex min-h-[350px] flex-col justify-center bg-cover bg-[position:center_54%] px-page py-[50px] text-white max-[760px]:min-h-[300px] max-[760px]:px-page-mobile max-[760px]:py-10"
         style={{ backgroundImage: `url(${menuImage})` }}
       >
         <div className="absolute inset-0 bg-[linear-gradient(90deg,#181a13b8_0%,#181a136e_46%,#181a130f_100%)]" />
@@ -24,7 +25,7 @@ export function MenuPage() {
           <em>makes you happy.</em>
         </h1>
       </section>
-      <section className="grid grid-cols-[.8fr_1.2fr] gap-[12%] px-[12.1%] pt-[76px] pb-[105px] max-[760px]:grid-cols-1 max-[760px]:gap-10 max-[760px]:px-[8%] max-[760px]:pt-[51px] max-[760px]:pb-[70px]">
+      <section className="grid grid-cols-[.8fr_1.2fr] gap-[12%] px-page pt-[76px] pb-[105px] max-[760px]:grid-cols-1 max-[760px]:gap-10 max-[760px]:px-page-mobile max-[760px]:pt-[51px] max-[760px]:pb-[70px]">
         <aside className="sticky top-8 self-start max-[760px]:static">
           <span className="flex items-center gap-3 text-[10px] font-semibold tracking-[1.1px] text-olive uppercase">
             <span className="text-[9px] text-clay">02</span> The menu
@@ -43,30 +44,34 @@ export function MenuPage() {
               <h2 className="mb-[17px] font-serif text-[26px] leading-tight font-medium max-[760px]:text-2xl">
                 {section.title}
               </h2>
-              {section.items.map((item) => (
-                <article className="border-t border-line py-4" key={item.name}>
-                  <div className="flex items-baseline gap-[10px] max-[390px]:gap-[7px]">
-                    <h3 className="m-0 shrink-0 text-[13px] font-semibold whitespace-nowrap max-[760px]:text-xs max-[390px]:text-[11px]">
-                      {item.name}
-                    </h3>
-                    <span
-                      className="flex-1 border-b border-dotted border-[#c9c5b8]"
-                      aria-hidden="true"
-                    />
-                    <span className="text-xs">
-                      {formatCurrency(item.price)}
-                    </span>
-                  </div>
-                  <p className="mt-[5px] text-[11px] text-muted">
-                    {item.description}
-                  </p>
-                  {item.tag && (
-                    <span className="mt-2 inline-block text-[9px] text-olive">
-                      {item.tag}
-                    </span>
-                  )}
-                </article>
-              ))}
+              <List
+                items={section.items}
+                getKey={(item) => item.name}
+                renderItem={(item) => (
+                  <article className="border-t border-line py-4">
+                    <div className="flex items-baseline gap-[10px] max-[390px]:gap-[7px]">
+                      <h3 className="m-0 shrink-0 text-[13px] font-semibold whitespace-nowrap max-[760px]:text-xs max-[390px]:text-[11px]">
+                        {item.name}
+                      </h3>
+                      <span
+                        className="flex-1 border-b border-dotted border-[#c9c5b8]"
+                        aria-hidden="true"
+                      />
+                      <span className="text-xs">
+                        {formatCurrency(item.price)}
+                      </span>
+                    </div>
+                    <p className="mt-[5px] text-[11px] text-muted">
+                      {item.description}
+                    </p>
+                    {item.tag && (
+                      <span className="mt-2 inline-block text-[9px] text-olive">
+                        {item.tag}
+                      </span>
+                    )}
+                  </article>
+                )}
+              />
             </section>
           ))}
         </div>
