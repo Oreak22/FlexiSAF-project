@@ -76,11 +76,6 @@ src/
   utils/        Small formatting helpers
 ```
 
-## Deploy with Vercel
+## Live Link
 
-1. Push this repository to GitHub.
-2. Sign in to [Vercel](https://vercel.com/) with GitHub and authorize repository access.
-3. Choose **Add New... → Project**, import this GitHub repository, and deploy. Vercel detects Vite; use `npm run build` as the build command and `dist` as the output directory if asked.
-4. Vercel creates a deployment for each push. The production branch (normally `main`) updates the production URL; other branches get preview deployments.
-
-`vercel.json` rewrites client-side routes to the app entry point so direct visits and refreshes work on `/menu` and `/contact`.
+[https://flexisafproject.vercel.app/](https://flexisafproject.vercel.app/)
