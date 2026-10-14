@@ -14,7 +14,7 @@ npm install
 npm run dev
 ```
 
-Open the local URL printed by Vite. The available pages are `/` (Our table), `/menu` (The menu), and `/contact` (Find us).
+Open the local URL printed by Vite. The available pages are `/` (Our table), `/menu` (The menu), `/reserve` (Reserve), and `/contact` (Find us).
 
 ## Checks
 
@@ -58,6 +58,51 @@ The app uses **Tailwind CSS v4 utility classes** in its React components, with s
 | Loading  | Button progress label or the shared loading feedback indicator                                 |
 | Empty    | `List` renders its empty message through `Feedback`                                            |
 | Error    | `Input`/`TextArea` display an associated field error; `Feedback` announces form or page errors |
+
+## State-driven feature
+
+The reserve page includes an interactive table-planning flow. `ReservePage` owns the shared reservation state, passes the current draft into the form and live preview, and sends add/edit/delete events through `reservationReducer`. The reducer handles the complex list updates while the contact note form demonstrates simpler local `useState`.
+
+Derived values are calculated during render instead of stored separately:
+
+- `reservationReady` controls whether the reservation form can submit.
+- `totalGuests` is reduced from the saved request list.
+- `depositEstimate` is derived from `totalGuests`.
+- Preview labels are derived from the current draft.
+
+## Controlled forms
+
+Both guest-facing forms use controlled inputs:
+
+- The note form stores `name`, `email`, and `message` in `useState`.
+- The table request form stores the active draft in reducer state.
+- Every input receives a `value` and `onChange` handler.
+- Submit handlers call `event.preventDefault()` and update React state instead of reading directly from the DOM.
+
+## State-flow diagram
+
+```text
+ContactPage
+  useState(noteForm)
+    -> Note form inputs
+    -> handleNoteSubmit()
+    -> submitted feedback
+
+ReservePage
+  useReducer(reservationReducer)
+    -> reservationState.draft
+       -> Table request form
+       -> Live preview
+    -> reservationState.requests
+       -> Request board
+       -> derived totalGuests + depositEstimate
+
+User events
+  input change -> dispatch(updateField)
+  submit form  -> dispatch(submitDraft)
+  edit item    -> dispatch(editRequest)
+  delete item  -> dispatch(deleteRequest)
+```
 
 ### Reference screen
 

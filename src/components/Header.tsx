@@ -4,6 +4,7 @@ import { PrimaryNavigation } from "./Navigation";
 const navigationItems = [
   { to: "/", label: "Our table", end: true },
   { to: "/menu", label: "The menu" },
+  { to: "/reserve", label: "Reserve" },
   { to: "/contact", label: "Find us" },
 ];
 
@@ -27,7 +28,7 @@ export function Header() {
       <PrimaryNavigation items={navigationItems} />
       <NavLink
         className="justify-self-end border-b border-olive py-[9px] text-xs text-ink max-[760px]:text-[10px] max-[390px]:text-[9px]"
-        to="/contact"
+        to="/reserve"
       >
         Book a table{" "}
         <span className="pl-2 text-olive" aria-hidden="true">

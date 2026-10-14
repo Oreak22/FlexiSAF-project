@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { Button } from "../components/Button";
 import { Card } from "../components/Card";
 import { Feedback } from "../components/Feedback";
@@ -10,11 +10,35 @@ const eyebrowClass =
 const detailLabelClass =
   "text-[9px] font-semibold tracking-[1.1px] text-muted uppercase";
 
+type NoteForm = {
+  name: string;
+  email: string;
+  message: string;
+};
+
+const initialNoteForm: NoteForm = {
+  name: "",
+  email: "",
+  message: "",
+};
+
 export function ContactPage() {
+  const [noteForm, setNoteForm] = useState(initialNoteForm);
   const [submitted, setSubmitted] = useState(false);
   usePageTitle("Come by");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  function handleNoteChange(
+    event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) {
+    const { name, value } = event.target;
+    setNoteForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
+    setSubmitted(false);
+  }
+
+  function handleNoteSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSubmitted(true);
   }
@@ -67,7 +91,7 @@ export function ContactPage() {
           </div>
         </div>
         <Card className="px-[30px] pt-[27px] pb-[29px] max-[760px]:px-5 max-[760px]:py-6">
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleNoteSubmit}>
             <span className={detailLabelClass}>A note to the team</span>
             <h2 className="mt-[7px] mb-5 font-serif text-[29px] leading-tight font-medium">
               Let's talk.
@@ -77,6 +101,8 @@ export function ContactPage() {
               name="name"
               autoComplete="name"
               required
+              value={noteForm.name}
+              onChange={handleNoteChange}
               placeholder="How should we call you?"
             />
             <Input
@@ -85,6 +111,8 @@ export function ContactPage() {
               type="email"
               autoComplete="email"
               required
+              value={noteForm.email}
+              onChange={handleNoteChange}
               placeholder="you@example.com"
             />
             <TextArea
@@ -92,6 +120,8 @@ export function ContactPage() {
               name="message"
               rows={3}
               required
+              value={noteForm.message}
+              onChange={handleNoteChange}
               placeholder="A question, a celebration, anything at all…"
             />
             <Button className="mt-2" type="submit" disabled={submitted}>

@@ -3,6 +3,7 @@ import { SiteLayout } from "./components/Layout";
 import { ContactPage } from "./pages/ContactPage";
 import { HomePage } from "./pages/HomePage";
 import { MenuPage } from "./pages/MenuPage";
+import { ReservePage } from "./pages/ReservePage";
 import "./styles/tailwind.css";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/menu" element={<MenuPage />} />
+          <Route path="/reserve" element={<ReservePage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
