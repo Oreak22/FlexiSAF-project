@@ -1,13 +1,111 @@
-import { menuSections } from "../data/menu";
-import { List } from "../components/List";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { Button } from "../components/Button";
+import { Feedback } from "../components/Feedback";
 import { usePageTitle } from "../hooks/usePageTitle";
-import { formatCurrency } from "../utils/formatCurrency";
 
 const menuImage =
   "https://images.unsplash.com/photo-1559339352-11d035aa65de?auto=format&fit=crop&w=1800&q=88";
+const recipesUrl = "https://dummyjson.com/recipes";
+const pageSize = 6;
+
+type Recipe = {
+  id: number;
+  name: string;
+  cuisine: string;
+  mealType: string[];
+  ingredients: string[];
+  image: string;
+  rating: number;
+  prepTimeMinutes: number;
+  cookTimeMinutes: number;
+};
+
+type MenuState =
+  | { status: "loading" }
+  | { status: "success"; recipes: Recipe[]; total: number }
+  | { status: "error"; message: string };
+
+function isObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function isRecipe(value: unknown): value is Recipe {
+  if (!isObject(value)) return false;
+  return (
+    typeof value.id === "number" &&
+    typeof value.name === "string" &&
+    typeof value.cuisine === "string" &&
+    Array.isArray(value.mealType) &&
+    value.mealType.every((item) => typeof item === "string") &&
+    Array.isArray(value.ingredients) &&
+    value.ingredients.every((item) => typeof item === "string") &&
+    typeof value.image === "string" &&
+    typeof value.rating === "number" &&
+    typeof value.prepTimeMinutes === "number" &&
+    typeof value.cookTimeMinutes === "number"
+  );
+}
+
+function parseRecipes(payload: unknown): { recipes: Recipe[]; total: number } {
+  if (
+    !isObject(payload) ||
+    !Array.isArray(payload.recipes) ||
+    typeof payload.total !== "number" ||
+    !Number.isInteger(payload.total) ||
+    payload.total < 0
+  ) {
+    throw new Error("The menu service returned an unexpected response.");
+  }
+
+  if (!payload.recipes.every(isRecipe)) {
+    throw new Error("Some menu items could not be read. Please try again.");
+  }
+
+  return { recipes: payload.recipes, total: payload.total };
+}
+
+function getErrorMessage(error: unknown) {
+  if (axios.isAxiosError(error) && !error.response) {
+    return "We could not reach the menu service. Check your connection and try again.";
+  }
+  return error instanceof Error
+    ? error.message
+    : "The menu could not be loaded. Please try again.";
+}
 
 export function MenuPage() {
+  const [menuState, setMenuState] = useState<MenuState>({ status: "loading" });
+  const [retryCount, setRetryCount] = useState(0);
+  const [page, setPage] = useState(1);
   usePageTitle("The menu");
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function loadMenu() {
+      setMenuState({ status: "loading" });
+      try {
+        const response = await axios.get<unknown>(recipesUrl, {
+          params: { limit: pageSize, skip: (page - 1) * pageSize },
+          signal: controller.signal,
+        });
+        const { recipes, total } = parseRecipes(response.data);
+        setMenuState({ status: "success", recipes, total });
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        setMenuState({ status: "error", message: getErrorMessage(error) });
+      }
+    }
+
+    void loadMenu();
+    return () => controller.abort();
+  }, [page, retryCount]);
+
+  const totalPages =
+    menuState.status === "success"
+      ? Math.ceil(menuState.total / pageSize)
+      : 0;
 
   return (
     <>
@@ -31,49 +129,98 @@ export function MenuPage() {
             <span className="text-[9px] text-clay">02</span> The menu
           </span>
           <p className="my-[27px] max-w-[250px] text-[13px] leading-[1.9] text-muted max-[760px]:mt-[18px] max-[760px]:mb-[10px] max-[760px]:max-w-[390px]">
-            Good ingredients, treated kindly. Our menu follows the seasons, so a
-            few favorites may come and go.
+            Browse fresh dishes from our connected recipe service. Ingredients
+            and timings are provided for each dish.
           </p>
           <span className="text-[10px] leading-[1.7] text-muted">
             Please tell us about allergies. We are happy to help.
           </span>
         </aside>
-        <div>
-          {menuSections.map((section) => (
-            <section className="mb-[42px]" key={section.title}>
-              <h2 className="mb-[17px] font-serif text-[26px] leading-tight font-medium max-[760px]:text-2xl">
-                {section.title}
-              </h2>
-              <List
-                items={section.items}
-                getKey={(item) => item.name}
-                renderItem={(item) => (
-                  <article className="border-t border-line py-4">
-                    <div className="flex items-baseline gap-[10px] max-[390px]:gap-[7px]">
-                      <h3 className="m-0 shrink-0 text-[13px] font-semibold whitespace-nowrap max-[760px]:text-xs max-[390px]:text-[11px]">
-                        {item.name}
-                      </h3>
-                      <span
-                        className="flex-1 border-b border-dotted border-[#c9c5b8]"
-                        aria-hidden="true"
-                      />
-                      <span className="text-xs">
-                        {formatCurrency(item.price)}
-                      </span>
+        <div aria-busy={menuState.status === "loading"}>
+          {menuState.status === "loading" && (
+            <Feedback state="loading">Loading the menu…</Feedback>
+          )}
+          {menuState.status === "error" && (
+            <div>
+              <Feedback state="error">{menuState.message}</Feedback>
+              <Button
+                className="mt-4"
+                onClick={() => setRetryCount((count) => count + 1)}
+              >
+                Retry
+              </Button>
+            </div>
+          )}
+          {menuState.status === "success" && menuState.recipes.length === 0 && (
+            <Feedback state="empty">No dishes are available right now.</Feedback>
+          )}
+          {menuState.status === "success" && menuState.recipes.length > 0 && (
+            <>
+              <Feedback state="success" className="mb-5">
+                Showing {(page - 1) * pageSize + 1}–
+                {Math.min(page * pageSize, menuState.total)} of {menuState.total} dishes
+              </Feedback>
+              <div className="grid grid-cols-2 gap-5 max-[620px]:grid-cols-1">
+                {menuState.recipes.map((recipe) => (
+                  <article
+                    className="overflow-hidden border border-line bg-white"
+                    key={recipe.id}
+                  >
+                    <img
+                      className="h-44 w-full object-cover"
+                      src={recipe.image}
+                      alt={recipe.name}
+                      loading="lazy"
+                    />
+                    <div className="p-4">
+                      <div className="flex items-start justify-between gap-3">
+                        <h2 className="font-serif text-xl leading-tight font-medium">
+                          {recipe.name}
+                        </h2>
+                        <span className="shrink-0 text-[10px] text-muted">
+                          ★ {recipe.rating.toFixed(1)}
+                        </span>
+                      </div>
+                      <p className="mt-2 text-[10px] tracking-wide text-olive uppercase">
+                        {recipe.cuisine}
+                        {recipe.mealType.length > 0 && ` · ${recipe.mealType.join(", ")}`}
+                      </p>
+                      <p className="mt-3 text-[11px] leading-relaxed text-muted">
+                        {recipe.ingredients.join(" · ")}
+                      </p>
+                      <p className="mt-3 text-[10px] text-muted">
+                        Prep {recipe.prepTimeMinutes} min · Cook {recipe.cookTimeMinutes} min
+                      </p>
                     </div>
-                    <p className="mt-[5px] text-[11px] text-muted">
-                      {item.description}
-                    </p>
-                    {item.tag && (
-                      <span className="mt-2 inline-block text-[9px] text-olive">
-                        {item.tag}
-                      </span>
-                    )}
                   </article>
-                )}
-              />
-            </section>
-          ))}
+                ))}
+              </div>
+              {totalPages > 1 && (
+                <nav
+                  className="mt-8 flex items-center justify-between gap-4"
+                  aria-label="Menu pagination"
+                >
+                  <Button
+                    variant="outline"
+                    disabled={page === 1}
+                    onClick={() => setPage((currentPage) => currentPage - 1)}
+                  >
+                    Previous
+                  </Button>
+                  <span className="text-[11px] text-muted" aria-current="page">
+                    Page {page} of {totalPages}
+                  </span>
+                  <Button
+                    variant="outline"
+                    disabled={page >= totalPages}
+                    onClick={() => setPage((currentPage) => currentPage + 1)}
+                  >
+                    Next
+                  </Button>
+                </nav>
+              )}
+            </>
+          )}
         </div>
       </section>
     </>

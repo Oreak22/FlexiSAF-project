@@ -70,6 +70,20 @@ Derived values are calculated during render instead of stored separately:
 - `depositEstimate` is derived from `totalGuests`.
 - Preview labels are derived from the current draft.
 
+## External API feature
+
+The menu page loads recipes from the public [DummyJSON recipes API](https://dummyjson.com/recipes?limit=6&skip=0) with Axios and `async`/`await`. It requests six items per page using the API's `limit` and `skip` parameters. The response is treated as untrusted data: the page checks that it contains a `recipes` array, a valid total, and that each item has the fields needed by the menu cards before rendering it.
+
+### Async UI states
+
+- **Loading:** A live status message appears while the request is in flight.
+- **Success:** Recipe cards render the dish name, cuisine, meal type, ingredients, rating, and preparation and cooking times.
+- **Empty:** A clear message appears when the API returns an empty recipes array.
+- **Error:** A readable error message and Retry button appear for network, server, or response-shape errors.
+- **Pagination:** Previous and Next controls request the matching API page and show the current page and total item count. The controls disable at the first and last pages.
+
+The request runs in `MenuPage`'s `useEffect` because it synchronizes the component with an external service. The effect depends on the current page and retry counter; display values such as the page count are derived during render. Each effect run creates an `AbortController`, passes its signal to Axios, and aborts the request during cleanup. The catch handler ignores an aborted request, so an old response cannot replace the state from a newer page, retry, or removed page.
+
 ## Controlled forms
 
 Both guest-facing forms use controlled inputs:
@@ -124,3 +138,5 @@ src/
 ## Live Link
 
 [https://flexisafproject.vercel.app/](https://flexisafproject.vercel.app/)
+
+The deployed app, including the API-backed menu, is available at the live Vercel URL above.
