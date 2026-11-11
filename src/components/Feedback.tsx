@@ -20,11 +20,10 @@ export function Feedback({ state, children, className = "" }: FeedbackProps) {
     <p
       className={`text-[11px] ${stateClasses[state]} ${className}`}
       role={state === "error" ? "alert" : "status"}
-      aria-live={state === "error" ? "assertive" : "polite"}
     >
       {state === "loading" && (
         <span
-          className="mr-2 inline-block size-2 animate-pulse rounded-full bg-current"
+          className="mr-2 inline-block size-2 animate-pulse rounded-full bg-current motion-reduce:animate-none"
           aria-hidden="true"
         />
       )}

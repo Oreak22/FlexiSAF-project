@@ -11,10 +11,10 @@ export function Footer() {
       <p className="text-[10px] text-muted max-[760px]:order-3 max-[760px]:m-0 max-[760px]:w-full">
         Good food. No occasion necessary.
       </p>
-      <div className="flex gap-5 text-[10px] text-muted">
+      <nav aria-label="Footer" className="flex gap-5 text-[10px] text-muted">
         <Link to="/menu">Menu</Link>
         <Link to="/contact">Contact & hours</Link>
-      </div>
+      </nav>
       <span className="text-[10px] text-muted max-[760px]:hidden">
         Nigeria · {currentYear}
       </span>

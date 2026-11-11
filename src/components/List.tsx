@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { Feedback } from "./Feedback";
 
 type ListProps<Item> = {
-  items: Item[];
+  items: readonly Item[];
   getKey: (item: Item) => string;
   renderItem: (item: Item) => ReactNode;
   emptyMessage?: string;

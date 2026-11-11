@@ -12,9 +12,12 @@ export function Card({
   ...props
 }: CardProps) {
   const toneClass = tone === "soft" ? "bg-surface-soft" : "bg-paper";
+  const classes = ["rounded-card", toneClass, className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
-    <div {...props} className={`rounded-card ${toneClass} ${className}`}>
+    <div {...props} className={classes}>
       {children}
     </div>
   );

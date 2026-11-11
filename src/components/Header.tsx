@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import { PrimaryNavigation } from "./Navigation";
+import { PrimaryNavigation, type NavigationItem } from "./Navigation";
 
-const navigationItems = [
+const navigationItems: NavigationItem[] = [
   { to: "/", label: "Our table", end: true },
   { to: "/menu", label: "The menu" },
   { to: "/reserve", label: "Reserve" },
