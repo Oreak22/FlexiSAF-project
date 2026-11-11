@@ -23,8 +23,4 @@
 - [11 Async Skeleton and Request States](../../.prompts/11-async-skeleton-states.md): Preserved existing feedback states and made the loading decoration respect reduced motion. Request lifecycle remains owned by the menu page.
 - [13 Behavior-Preserving Refactor](../../.prompts/13-behavior-preserving-refactor.md): Kept the shared component prop contracts and existing visual/route behavior, except for the safer default button type and added skip-navigation affordance.
 
-## Validation
 
-- `npm run build` passed.
-- `npm run lint` passed.
-- No test script is configured in `package.json`.
